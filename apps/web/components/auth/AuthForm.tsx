@@ -6,12 +6,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { userAuthSchema } from "@/lib/validation";
 import { FormData } from "@/lib/types";
 import { redirect } from "next/navigation";
-import { Button } from "@ui/components/button";
 import FormInput from "../ui/FormInput";
 import Sperate from "./Sperate";
+import ClipLoader from "react-spinners/ClipLoader";
+import { Button } from "@ui/components/ui/button";
 
 const AuthForm = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [githubLoading, setGithubLoading] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
   const {
     register,
@@ -22,14 +24,14 @@ const AuthForm = (): JSX.Element => {
   });
 
   const handleGitHubSignIn = async () => {
+    setGithubLoading(true);
     try {
-      setIsLoading(true);
       const callback = await signIn("github");
 
       if (callback?.error) {
         console.log(callback);
         setMessage("Error during GitHub sign-in");
-        setIsLoading(false);
+        setGithubLoading(false);
       }
 
       if (callback?.ok && !callback?.error) {
@@ -69,33 +71,56 @@ const AuthForm = (): JSX.Element => {
     <form className="flex flex-col gap-3" onSubmit={handleSubmit(onSubmit)}>
       <FormInput
         text={"Email"}
-        errors={errors}
         type={"email"}
         placeholder={"Email"}
         register={{ ...register("email") }}
-        disabled={isLoading}
+        disabled={isLoading || githubLoading}
       />
+      {errors?.email && (
+        <p className="px-1 text-xs text-red-600">{errors.email.message}</p>
+      )}
       <FormInput
         text={"Password"}
-        errors={errors}
         type={"password"}
         placeholder={"Password"}
         register={{ ...register("password") }}
-        disabled={isLoading}
+        disabled={isLoading || githubLoading}
       />
-
-      <Button variant="default" type="submit" disabled={isLoading}>
+      {errors?.password && (
+        <p className="px-1 text-xs text-red-600">{errors.password.message}</p>
+      )}
+      {/* @ts-ignore */}
+      <Button
+        variant="default"
+        className="flex gap-2"
+        type="submit"
+        disabled={isLoading || githubLoading}
+      >
+        <ClipLoader
+          size={20}
+          aria-label="Loading Spinner"
+          data-testid="loader"
+          loading={isLoading}
+        />
         Sign In
       </Button>
 
       <Sperate>OR CONTINUE WITH</Sperate>
-
+      {/* @ts-ignore */}
       <Button
         variant="outline"
         type="button"
         onClick={handleGitHubSignIn}
-        disabled={isLoading}
+        disabled={isLoading || githubLoading}
+        className="flex gap-2"
       >
+        <ClipLoader
+          size={20}
+          color="white"
+          aria-label="Loading Spinner"
+          data-testid="loader"
+          loading={githubLoading}
+        />
         Github
       </Button>
     </form>

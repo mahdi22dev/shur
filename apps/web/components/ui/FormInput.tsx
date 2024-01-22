@@ -1,6 +1,6 @@
 "use client";
 import { Label } from "@ui/components/label";
-import { Input } from "@ui/components/input";
+import { Input } from "@ui/components/ui/input";
 import React from "react";
 
 type FormInput = {
@@ -16,15 +16,16 @@ export default function FormInput({
   type,
   placeholder,
   register,
-  errors,
   disabled,
   ...props
 }): JSX.Element {
   return (
     <div className="grid w-full max-w-sm items-center gap-1.5">
+      {/* @ts-ignore */}
       <Label htmlFor="password">{text}</Label>
+      {/* @ts-ignore */}
       <Input
-        className="h-10 w-[300px] bg-inherit placeholder:text-gray-200 placeholder:text-opacity-50 "
+        className="h-10 w-[300px] bg-inherit placeholder:text-gray-200 placeholder:text-opacity-50"
         placeholder={placeholder}
         type={type}
         autoCapitalize="none"
@@ -33,10 +34,7 @@ export default function FormInput({
         disabled={disabled}
         {...register}
         {...props}
-      />
-      {errors?.type && (
-        <p className="px-1 text-xs text-red-600">{errors.type.message}</p>
-      )}
+      />{" "}
     </div>
   );
 }
