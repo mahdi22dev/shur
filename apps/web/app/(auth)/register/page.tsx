@@ -1,18 +1,18 @@
 import { ServerSession } from "../../../services/auth/auth.service";
+import AuthRegisterForm from "@/components/auth/AuthRegisterForm";
+import { FaArrowLeftLong } from "react-icons/fa6";
+import { buttonVariants } from "@ui/components/button";
 import { redirect } from "next/navigation";
+import { cn } from "@/lib/utils";
 import { Metadata } from "next";
 import Link from "next/link";
-import { FaArrowLeftLong } from "react-icons/fa6";
-import AuthForm from "@/components/auth/AuthLoginForm";
-import { buttonVariants } from "@ui/components/button";
-import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "Login",
-  description: "Login to your account",
+  title: "Sign Up",
+  description: "Create new account",
 };
 
-export default async function Login(): Promise<JSX.Element> {
+export default async function Register(): Promise<JSX.Element> {
   const session = await ServerSession();
 
   if (session) {
@@ -40,7 +40,7 @@ export default async function Login(): Promise<JSX.Element> {
         </p>
       </div>
 
-      <AuthForm />
+      <AuthRegisterForm />
       <p className="px-8 text-center text-sm text-gray-200 text-opacity-80">
         <Link href="/register">Don&apos;t have an account? Sign Up</Link>
       </p>

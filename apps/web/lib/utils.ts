@@ -1,7 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import bcrypt from "bcrypt";
-
+import crypto from "crypto";
 export async function generatePassword() {
   const charset =
     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_=+";
@@ -17,6 +17,10 @@ export async function generatePassword() {
   return hashedPassword;
 }
 
+export function generateUserId(username: string) {
+  const hash = crypto.createHash("md5").update(username).digest("hex");
+  return hash;
+}
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }

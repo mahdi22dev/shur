@@ -3,7 +3,7 @@ import { signIn } from "next-auth/react";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { userAuthSchema } from "@/lib/validation";
+import { userAuthLoginSchema } from "@/lib/validation";
 import { FormData } from "@/lib/types";
 import { redirect } from "next/navigation";
 import FormInput from "../ui/FormInput";
@@ -11,7 +11,7 @@ import Sperate from "./Sperate";
 import ClipLoader from "react-spinners/ClipLoader";
 import { Button } from "@ui/components/ui/button";
 
-const AuthForm = (): JSX.Element => {
+const AuthLoginForm = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [githubLoading, setGithubLoading] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
@@ -20,7 +20,7 @@ const AuthForm = (): JSX.Element => {
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({
-    resolver: zodResolver(userAuthSchema),
+    resolver: zodResolver(userAuthLoginSchema),
   });
 
   const handleGitHubSignIn = async () => {
@@ -127,4 +127,4 @@ const AuthForm = (): JSX.Element => {
   );
 };
 
-export default AuthForm;
+export default AuthLoginForm;
