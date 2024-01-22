@@ -1,4 +1,5 @@
 import * as z from "zod";
-import { userAuthSchema } from "./validation";
+import { userAuthRigsterSchema, userAuthLoginSchema } from "./validation";
 
-export type FormData = z.infer<typeof userAuthSchema>;
+export type LogInFormData = z.infer<typeof userAuthLoginSchema>;
+export type RegisterFormData = z.infer<typeof userAuthRigsterSchema>;

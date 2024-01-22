@@ -63,9 +63,6 @@ export const authOptions: NextAuthOptions = {
   },
   debug: process.env.NODE_ENV !== "production",
   callbacks: {
-    redirect: async () => {
-      return "/dashboard";
-    },
     jwt({ token, account, user }: any) {
       if (account) {
         token.accessToken = account.access_token;

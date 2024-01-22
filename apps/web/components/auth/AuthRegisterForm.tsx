@@ -4,12 +4,12 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { userAuthRigsterSchema } from "@/lib/validation";
-import { redirect } from "next/navigation";
 import FormInput from "../ui/FormInput";
 import Sperate from "./Sperate";
 import ClipLoader from "react-spinners/ClipLoader";
 import { Button } from "@ui/components/ui/button";
 import { toast } from "sonner";
+import { RegisterFormData } from "@/lib/types";
 
 const AuthRegisterForm = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -19,12 +19,7 @@ const AuthRegisterForm = (): JSX.Element => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<{
-    email: string;
-    name: string;
-    password: string;
-    confirm_password: string;
-  }>({
+  } = useForm<RegisterFormData>({
     resolver: zodResolver(userAuthRigsterSchema),
   });
 
@@ -32,25 +27,10 @@ const AuthRegisterForm = (): JSX.Element => {
     setGithubLoading(true);
     try {
       const callback = await signIn("github");
-
+      toast.loading("sign in with github...");
       if (callback?.error) {
         toast.error("Error during GitHub sign-in");
         setGithubLoading(false);
-      }
-
-      if (callback?.ok && !callback?.error) {
-        const promise = () =>
-          new Promise((resolve) => setTimeout(resolve, 3000));
-
-        toast.promise(promise, {
-          loading: "Loading...",
-          // @ts-ignore
-          success: () => {
-            toast.success("Redirecting...");
-            redirect("/dashboard");
-          },
-          error: "Error redirecting",
-        });
       }
     } catch (error) {
       console.error("Error during GitHub sign-in:", error);
@@ -77,46 +57,11 @@ const AuthRegisterForm = (): JSX.Element => {
       if (res.status == 400) {
         toast.error(responseJson?.message);
       } else if (res.status == 200) {
-        const promise = () =>
-          new Promise((resolve, reject) => {
-            signIn("credentials", { ...data, redirect: false }).then(
-              (callback) => {
-                if (callback?.error) {
-                  console.log(callback);
-                  reject(callback);
-                }
-                if (callback?.ok && !callback?.error) {
-                  setTimeout(() => {
-                    resolve(callback);
-                  }, 2000);
-                }
-              }
-            );
-          });
-
-        toast.promise(promise, {
-          loading: "Loading...",
-          // @ts-ignore
-          success: () => {
-            toast.success("Register new user...");
-            redirect("/dashboard");
-          },
-          error: "Error regsitring new user",
-        });
-
-        // await signIn("credentials", { ...data, redirect: false }).then(
-        //   (callback) => {
-        //     if (callback?.error) {
-        //       console.log(callback);
-        //       setIsLoading(false);
-        //     }
-        //     if (callback?.ok && !callback?.error) {
-        //       setTimeout(() => {
-        //         redirect("/dashboard");
-        //       }, 2000);
-        //     }
-        //   }
-        // );
+        toast.success("new user registred successfully");
+        // for hard navigation
+        setTimeout(() => {
+          window.location.href = "/login";
+        }, 500);
       } else if (res.status == 409) {
         toast.error(responseJson?.message);
       } else {
@@ -131,14 +76,14 @@ const AuthRegisterForm = (): JSX.Element => {
   return (
     <form className="flex flex-col gap-3" onSubmit={handleSubmit(onSubmit)}>
       <FormInput
-        text={"name"}
+        text={"Name"}
         type={"text"}
         placeholder={"Full Name"}
         register={{ ...register("name") }}
         disabled={isLoading || githubLoading}
       />
       {errors?.name && (
-        <p className="px-1 text-xs text-red-600">{errors.email.message}</p>
+        <p className="px-1 text-xs text-red-600">{errors.name.message}</p>
       )}
       <FormInput
         text={"Email"}
@@ -161,14 +106,16 @@ const AuthRegisterForm = (): JSX.Element => {
         <p className="px-1 text-xs text-red-600">{errors.password.message}</p>
       )}
       <FormInput
-        text={"Password"}
+        text={"Confirm Password"}
         type={"password"}
         placeholder={"Confirm Password"}
         register={{ ...register("confirm_password") }}
         disabled={isLoading || githubLoading}
       />
-      {errors?.password && (
-        <p className="px-1 text-xs text-red-600">{errors.password.message}</p>
+      {errors?.confirm_password && (
+        <p className="px-1 text-xs text-red-600">
+          {errors.confirm_password.message}
+        </p>
       )}
       {/* @ts-ignore */}
       <Button

@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/prisma";
-import { generateUserId } from "@/lib/utils";
 import bcrypt from "bcrypt";
 import { NextResponse } from "next/server";
 
@@ -29,7 +28,6 @@ export async function POST(req) {
     const newUser = await prisma.user.create({
       //@ts-ignore
       data: {
-        userId: generateUserId(name),
         name: name,
         email: email,
         password: hashedPassword,
@@ -43,5 +41,7 @@ export async function POST(req) {
   } catch (error) {
     console.log(error.message);
     return NextResponse.json({ message: "Error saving user" }, { status: 400 });
+  } finally {
+    await prisma.$disconnect();
   }
 }

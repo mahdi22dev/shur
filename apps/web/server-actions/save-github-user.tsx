@@ -15,7 +15,7 @@ export const saveGithubUser = async (profile: any) => {
   try {
     if (profile) {
       const userExist = await prisma.user.findFirst({
-        where: { userId: profile.id },
+        where: { id: profile.id },
       });
       if (!userExist) {
         await prisma.user.create({ data: userObject });
