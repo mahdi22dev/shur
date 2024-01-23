@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import "../../styles/globals.css";
+import Providers from "@/providers/Providers";
 
 export const metadata: Metadata = {
   title: "dashboard",
@@ -12,13 +13,15 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <section>
-      <div className="flex justify-between bg-gray-800 p-5">
-        <p>links</p>
-        <p>anylitics</p>
-        <p>settings</p>
-      </div>
-      {children}
-    </section>
+    <Providers>
+      <section>
+        <div className="flex justify-between bg-gray-800 p-5">
+          <p>links</p>
+          <p>anylitics</p>
+          <p>settings</p>
+        </div>
+        {children}
+      </section>{" "}
+    </Providers>
   );
 }

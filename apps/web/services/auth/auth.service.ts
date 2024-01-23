@@ -4,7 +4,6 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { useSession } from "next-auth/react";
 import { saveGithubUser } from "../../server-actions/save-github-user";
 import { prisma } from "@/lib/prisma";
-import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 
 export const authOptions: NextAuthOptions = {

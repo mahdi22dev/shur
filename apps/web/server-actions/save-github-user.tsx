@@ -12,10 +12,11 @@ export const saveGithubUser = async (profile: any) => {
     image: profile.avatar_url,
     password: await generatePassword(),
   };
+
   try {
     if (profile) {
       const userExist = await prisma.user.findFirst({
-        where: { id: profile.id },
+        where: { userId: profile.id.toString() },
       });
       if (!userExist) {
         await prisma.user.create({ data: userObject });
