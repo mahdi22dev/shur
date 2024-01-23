@@ -12,18 +12,7 @@ export async function POST(req) {
       { status: 400 }
     );
   }
-  const existingUser = await prisma.user.findUnique({
-    where: { email: data.data.email },
-  });
-
-  if (existingUser) {
-    return NextResponse.json(
-      { message: "This email already exist" },
-      { status: 409 }
-    );
-  }
   const hashedPassword = await bcrypt.hash(password, 10);
-
   try {
     const newUser = await prisma.user.create({
       //@ts-ignore
@@ -39,8 +28,17 @@ export async function POST(req) {
       { status: 200 }
     );
   } catch (error) {
-    console.log(error.message);
-    return NextResponse.json({ message: "Error saving user" }, { status: 400 });
+    if (error.code === "P2002") {
+      return NextResponse.json(
+        { message: "This email already exist" },
+        { status: 409 }
+      );
+    } else {
+      return NextResponse.json(
+        { message: "Error saving user" },
+        { status: 400 }
+      );
+    }
   } finally {
     await prisma.$disconnect();
   }

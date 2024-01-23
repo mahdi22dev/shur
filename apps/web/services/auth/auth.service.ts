@@ -31,27 +31,32 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        if (!credentials.email || !credentials.password) {
-          return null;
-        }
-        const userEmail = credentials.email;
-        const existingUser = await prisma.user.findUnique({
-          where: { email: userEmail },
-        });
+        try {
+          if (!credentials.email || !credentials.password) {
+            return null;
+          }
+          const userEmail = credentials.email;
+          const existingUser = await prisma.user.findUnique({
+            where: { email: userEmail },
+          });
 
-        if (!existingUser) {
-          return null;
-        }
-        // compare passwords
-        const passwordsMatch = await bcrypt.compare(
-          credentials.password,
-          existingUser.password
-        );
-        if (!passwordsMatch) {
-          return null;
-        }
+          if (!existingUser) {
+            return null;
+          }
+          // compare passwords
+          const passwordsMatch = await bcrypt.compare(
+            credentials.password,
+            existingUser.password
+          );
+          if (!passwordsMatch) {
+            return null;
+          }
 
-        return existingUser;
+          return existingUser;
+        } catch (error) {
+        } finally {
+          await prisma.$disconnect();
+        }
       },
     }),
   ],
