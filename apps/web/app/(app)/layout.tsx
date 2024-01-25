@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import "../../styles/globals.css";
+import "../globals.css";
 import Providers from "@/providers/Providers";
 
 export const metadata: Metadata = {
@@ -21,7 +21,7 @@ export default function DashboardLayout({
           <p>settings</p>
         </div>
         {children}
-      </section>{" "}
+      </section>
     </Providers>
   );
 }

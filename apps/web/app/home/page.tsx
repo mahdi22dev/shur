@@ -1,25 +1,21 @@
-import { getServerSession } from "next-auth";
-import { ServerSession, authOptions } from "../../services/auth/auth.service";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@ui/components/button";
+import Navbar from "@/components/header/Navbar";
 
 export default async function Home(): Promise<JSX.Element> {
-  const session = await getServerSession(authOptions);
-  console.log(session);
-
   return (
     <main className={"bg-black w-full min-h-[100vh] p-5 "}>
-      <nav className="flex gap-1 justify-between items-center">
+      <div className="flex gap-1 justify-between items-center max-w-5xl mx-auto">
         <div>logo</div>
-        <div>links</div>
+        <Navbar />
         <Link
           href={"/login"}
           className={cn(buttonVariants({ variant: "outline" }), "")}
         >
           <p className="cursor-pointer">sign in</p>
         </Link>
-      </nav>
+      </div>
     </main>
   );
 }
